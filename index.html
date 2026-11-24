@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Camino a Belén · Adviento 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep: #0d0b14;
+      --bg-mid: #1a1429;
+      --card-locked: rgba(34, 28, 53, 0.75);
+      --card-unlocked: linear-gradient(145deg, #3b2354, #241638);
+      --card-sunday: linear-gradient(145deg, #5c2751, #361735);
+      --card-opened: linear-gradient(145deg, #163336, #0f2226);
+      --gold: #e6be74;
+      --gold-bright: #ffe1a3;
+      --rose-gaudete: #e87a90;
+      --purple-advent: #8a5cf5;
+      --text-main: #f5f2eb;
+      --text-muted: #b8b0c4;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: radial-gradient(ellipse at top, #251a3d 0%, var(--bg-mid) 45%, var(--bg-deep) 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+      padding-bottom: 60px;
+    }
+
+    /* Lienzo de nieve y estrellas */
+    #snow-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 35px 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Cabecera y Corona de Adviento */
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 50px;
+      background: rgba(230, 190, 116, 0.12);
+      border: 1px solid rgba(230, 190, 116, 0.35);
+      color: var(--gold);
+      font-size: 0.78rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      font-weight: 600;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.1rem);
+      color: var(--gold-bright);
+      text-shadow: 0 4px 24px rgba(230, 190, 116, 0.25);
+      margin-bottom: 14px;
+      line-height: 1.15;
+    }
+
+    .subtitle {
+      max-width: 640px;
+      margin: 0 auto 28px;
+      color: var(--text-muted);
+      font-size: 1rem;
+      line-height: 1.65;
+    }
+
+    .subtitle strong {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    /* Corona de Adviento visual */
+    .wreath-bar {
+      display: inline-flex;
+      align-items: center;
+      gap: 22px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 14px 28px;
+      border-radius: 20px;
+      backdrop-filter: blur(8px);
+    }
+
+    .candle-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .flame {
+      width: 10px;
+      height: 16px;
+      background: radial-gradient(circle at bottom, #fff7cc 10%, #ffaa00 60%, #ff5500 100%);
+      border-radius: 50% 50% 35% 35%;
+      box-shadow: 0 0 12px #ffae00, 0 0 24px rgba(255, 174, 0, 0.6);
+      animation: flicker 1.6s infinite alternate ease-in-out;
+      opacity: 0.15;
+      transform: scale(0.7);
+      transition: all 0.4s ease;
+    }
+
+    .candle-unit.lit .flame {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .wax {
+      width: 16px;
+      height: 30px;
+      border-radius: 4px 4px 2px 2px;
+      background: var(--purple-advent);
+      box-shadow: inset -3px 0 6px rgba(0, 0, 0, 0.35);
+    }
+
+    .candle-unit.rose .wax {
+      background: var(--rose-gaudete);
+    }
+
+    .candle-label {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+    }
+
+    @keyframes flicker {
+      0% { transform: scale(1) rotate(-2deg); }
+      100% { transform: scale(1.08) rotate(2deg); }
+    }
+
+    /* Barra de progreso */
+    .progress-wrapper {
+      max-width: 420px;
+      margin: 22px auto 0;
+      text-align: center;
+    }
+
+    .progress-text {
+      font-size: 0.82rem;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+
+    .progress-track {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--gold), #69e5c2);
+      transition: width 0.5s ease;
+    }
+
+    /* Cuadrícula de 24 días */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+      gap: 18px;
+      margin-top: 35px;
+    }
+
+    .door {
+      aspect-ratio: 1 / 1.08;
+      background: var(--card-locked);
+      border: 1.5px solid rgba(230, 190, 116, 0.16);
+      border-radius: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 12px;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+      backdrop-filter: blur(6px);
+      overflow: hidden;
+    }
+
+    /* Marco interior tipo vidriera/puerta */
+    .door::before {
+      content: "";
+      position: absolute;
+      inset: 6px;
+      border: 1px dashed rgba(230, 190, 116, 0.15);
+      border-radius: 12px;
+      pointer-events: none;
+    }
+
+    .door.available {
+      background: var(--card-unlocked);
+      border-color: var(--gold);
+      box-shadow: 0 8px 25px rgba(230, 190, 116, 0.18);
+    }
+
+    .door.available.sunday {
+      background: var(--card-sunday);
+      border-color: #f3b562;
+    }
+
+    .door.available:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 14px 32px rgba(230, 190, 116, 0.32);
+    }
+
+    .door.opened {
+      background: var(--card-opened);
+      border-color: rgba(105, 229, 194, 0.55);
+      box-shadow: 0 6px 20px rgba(105, 229, 194, 0.12);
+    }
+
+    .door-top {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .door.available .door-top {
+      color: var(--gold-bright);
+    }
+
+    .door-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.35rem;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.35);
+      line-height: 1;
+    }
+
+    .door.available .door-number {
+      color: var(--gold-bright);
+      text-shadow: 0 2px 12px rgba(230, 190, 116, 0.4);
+    }
+
+    .door.opened .door-number {
+      color: #8cf2d4;
+    }
+
+    .door-status {
+      font-size: 0.78rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--text-muted);
+    }
+
+    .door.available .door-status {
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    .door.opened .door-status {
+      color: #69e5c2;
+    }
+
+    /* Toast de aviso cuando está cerrado */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #281f3d;
+      border: 1px solid var(--gold);
+      color: var(--text-main);
+      padding: 12px 22px;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      z-index: 200;
+      opacity: 0;
+      transition: all 0.35s ease;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Modal elegante */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(8, 6, 14, 0.84);
+      backdrop-filter: blur(8px);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+      animation: fadeIn 0.25s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-card {
+      background: linear-gradient(165deg, #241c38 0%, #171224 100%);
+      border: 1.5px solid var(--gold);
+      border-radius: 24px;
+      max-width: 520px;
+      width: 100%;
+      padding: 34px 30px;
+      position: relative;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(230, 190, 116, 0.12);
+      transform: scale(0.95);
+      animation: popIn 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    @keyframes popIn {
+      to { transform: scale(1); }
+    }
+
+    .modal-date-tag {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--gold);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .modal-card h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.65rem;
+      color: var(--gold-bright);
+      margin-bottom: 18px;
+      line-height: 1.25;
+    }
+
+    .scripture-box {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.05rem;
+      line-height: 1.55;
+      color: #fff8eb;
+      background: rgba(230, 190, 116, 0.08);
+      border-left: 3px solid var(--gold);
+      padding: 14px 18px;
+      border-radius: 0 12px 12px 0;
+      margin-bottom: 18px;
+    }
+
+    .reflection-text {
+      font-size: 0.96rem;
+      line-height: 1.68;
+      color: #e2dce8;
+      margin-bottom: 20px;
+    }
+
+    .purpose-box {
+      background: rgba(105, 229, 194, 0.09);
+      border: 1px solid rgba(105, 229, 194, 0.28);
+      border-radius: 14px;
+      padding: 15px 18px;
+      font-size: 0.92rem;
+      line-height: 1.55;
+      color: #d6fff3;
+    }
+
+    .purpose-box strong {
+      color: #69e5c2;
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .btn-close {
+      margin-top: 24px;
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(90deg, var(--gold), #d4a34e);
+      color: #161122;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-close:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(230, 190, 116, 0.35);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 50px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      opacity: 0.7;
+    }
+
+    @media (max-width: 500px) {
+      .grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+      .door {
+        padding: 12px 8px;
+        border-radius: 14px;
+      }
+      .door-number {
+        font-size: 1.85rem;
+      }
+      .wreath-bar {
+        gap: 14px;
+        padding: 12px 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="snow-canvas"></canvas>
+
+  <div class="container">
+    <header>
+      <div class="badge">20 de Noviembre · Confirmada en el Espíritu</div>
+      <h1>Camino a Belén</h1>
+      <p class="subtitle">
+        Para mi ahijada: aquel <strong>20 de noviembre</strong> el Espíritu Santo selló tu corazón.
+        Ahora caminamos juntos hacia la Navidad. Abre una ventana cada día de diciembre para preparar el pesebre de tu alma.
+      </p>
+
+      <!-- Corona de Adviento dinámica -->
+      <div class="wreath-bar" title="Corona de Adviento 2026">
+        <div class="candle-unit" id="candle-1">
+          <div class="flame"></div>
+          <div class="wax"></div>
+          <span class="candle-label">1er Dom</span>
+        </div>
+        <div class="candle-unit" id="candle-2">
+          <div class="flame"></div>
+          <div class="wax"></div>
+          <span class="candle-label">2º Dom</span>
+        </div>
+        <div class="candle-unit rose" id="candle-3">
+          <div class="flame"></div>
+          <div class="wax"></div>
+          <span class="candle-label">Gaudete</span>
+        </div>
+        <div class="candle-unit" id="candle-4">
+          <div class="flame"></div>
+          <div class="wax"></div>
+          <span class="candle-label">4º Dom</span>
+        </div>
+      </div>
+
+      <div class="progress-wrapper">
+        <div class="progress-text" id="progress-text">0 de 24 ventanas abiertas</div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+      </div>
+    </header>
+
+    <main class="grid" id="calendar-grid"></main>
+
+    <footer>
+      Hecho con cariño por tu padrino/madrina · Adviento 2026
+    </footer>
+  </div>
+
+  <!-- Aviso flotante -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modal" onclick="handleOverlayClick(event)">
+    <div class="modal-card">
+      <div class="modal-date-tag" id="modal-tag">1 de Diciembre</div>
+      <h2 id="modal-title">Título</h2>
+      <div class="scripture-box" id="modal-quote"></div>
+      <p class="reflection-text" id="modal-message"></p>
+      <div class="purpose-box">
+        <strong>Propósito de hoy</strong>
+        <span id="modal-challenge"></span>
+      </div>
+      <button class="btn-close" onclick="closeModal()">Guardar en el corazón</button>
+    </div>
+  </div>
+
+  <script>
+    // Añade ?preview=true al final de la URL de Vercel para previsualizar todos los días abiertos
+    const isPreview = new URLSearchParams(window.location.search).get('preview') === 'true';
+
+    // Contenido completo del 1 al 24 de diciembre de 2026
+    const adventDays = [
+      {
+        day: 1,
+        title: "El fuego que ya llevas dentro",
+        quote: "«Te recomiendo que reavives el don de Dios que hay en ti por la imposición de mis manos» (2 Tim 1, 6)",
+        message: "Empieza diciembre. Hace apenas unos días recibiste el sello del Espíritu Santo. El Adviento no es esperar algo lejano, sino dejar que ese fuego que ya habita en ti ilumine tu día a día.",
+        challenge: "Dedica 3 minutos esta noche a dar gracias por tu Confirmación y pide al Espíritu Santo vivir este mes con ilusión."
+      },
+      {
+        day: 2,
+        title: "Don de Sabiduría: mirar con los ojos de Dios",
+        quote: "«Enséñanos a calcular nuestros años, para que adquiramos un corazón sensato» (Sal 90, 12)",
+        message: "Diciembre suele llenarse de prisas, compras y ruido. El don de Sabiduría te ayuda a distinguir lo verdaderamente importante de lo superficial.",
+        challenge: "Hoy, antes de mirar el móvil por la mañana, ofrece tu día con una oración breve: «Ven, Espíritu Santo»."
+      },
+      {
+        day: 3,
+        title: "San Francisco Javier: un corazón sin fronteras",
+        quote: "«Id al mundo entero y proclamad el Evangelio» (Mc 16, 15)",
+        message: "Hoy celebramos a San Francisco Javier, un joven que lo dejó todo para llevar a Jesús hasta Oriente. Ser confirmada es ser misionera justo donde estás: en tu familia, con tus amigos, en tus estudios o trabajo.",
+        challenge: "Reza hoy por los misioneros y por algún amigo que esté lejos de la fe."
+      },
+      {
+        day: 4,
+        title: "Preparar el camino",
+        quote: "«Preparad el camino del Señor, allanad sus senderos» (Lc 3, 4)",
+        message: "Para que Jesús nazca con fuerza esta Navidad en tu vida, hace falta quitar piedras del camino: algún rencor guardado, la pereza espiritual o el desánimo.",
+        challenge: "Piensa si hay alguien con quien necesites tener un gesto de cercanía o reconciliación esta semana."
+      },
+      {
+        day: 5,
+        title: "Don de Entendimiento",
+        quote: "«Abre mis ojos, y contemplaré las maravillas de tu voluntad» (Sal 119, 18)",
+        message: "El entendimiento es ese don que nos permite pasar de leer el Evangelio como un libro antiguo a escucharlo como una carta personal escrita para ti hoy.",
+        challenge: "Lee despacio el Evangelio de hoy (aunque sean 5 versículos) y quédate con una sola palabra."
+      },
+      {
+        day: 6,
+        isSunday: true,
+        title: "2º Domingo de Adviento · La voz en el desierto",
+        quote: "«Una voz grita en el desierto: Preparad el camino del Señor» (Mc 1, 3)",
+        message: "Encendemos la segunda vela de la corona. Juan el Bautista nos recuerda que la alegría verdadera nace de hacer espacio a Dios. ¡Qué alegría verte caminar en la fe desde tu Confirmación!",
+        challenge: "🎟️ VALE ESPECIAL DE DOMINGO: Tienes un café/chocolate caliente pagado conmigo esta semana para charlar de cómo vas."
+      },
+      {
+        day: 7,
+        title: "San Ambrosio: el maestro que supo esperar",
+        quote: "«La fe es el fundamento de lo que se espera» (Heb 11, 1)",
+        message: "San Ambrosio acompañó a San Agustín hasta su bautismo con paciencia infinita. En la Iglesia nunca caminamos solos; siempre nos sostenemos unos a otros en la oración.",
+        challenge: "Reza hoy una Avemaría por nuestro párroco, tus catequistas y el grupo con el que te confirmaste."
+      },
+      {
+        day: 8,
+        isSunday: true,
+        title: "Inmaculada Concepción: el «Sí» que lo cambió todo",
+        quote: "«He aquí la esclava del Señor; hágase en mí según tu palabra» (Lc 1, 38)",
+        message: "Hoy es un día grande. María dijo «sí» sin entenderlo todo, confiando plenamente en Dios. Tu «sí» en la Confirmación se une al suyo. Deja que Ella te enseñe a cuidar a Jesús en tu interior.",
+        challenge: "Visita una iglesia hoy (es fiesta de precepto) y regálale a la Virgen una flor o una oración personal."
+      },
+      {
+        day: 9,
+        title: "Don de Consejo",
+        quote: "«Tu palabra es lámpara para mis pasos, luz en mi sendero» (Sal 119, 105)",
+        message: "Cuando tengas dudas sobre qué decisión tomar, recuerda que tienes el don de Consejo. El Espíritu Santo habla en la paz de la conciencia bien formada.",
+        challenge: "Antes de tomar una decisión hoy, haz una pausa de 10 segundos y pregunta: «Señor, ¿qué harías Tú?»."
+      },
+      {
+        day: 10,
+        title: "La humildad de lo pequeño",
+        quote: "«El que es fiel en lo poco, lo es también en lo mucho» (Lc 16, 10)",
+        message: "Dios eligió una aldea pequeña llamada Nazaret y un pesebre humilde. No busques hacer cosas extraordinarias; pon amor extraordinario en las cosas ordinarias de hoy.",
+        challenge: "Haz hoy una tarea en casa que nadie te haya pedido y sin decir que la has hecho tú."
+      },
+      {
+        day: 11,
+        title: "Don de Fortaleza",
+        quote: "«Todo lo puedo en aquel que me conforta» (Flp 4, 13)",
+        message: "La Confirmación es el sacramento de la madurez cristiana. El don de Fortaleza no quita las dificultades, pero te da firmeza para mantenerte fiel cuando el ambiente va en otra dirección.",
+        challenge: "No te avergüences hoy de mostrar tu fe (bendecir la mesa, llevar tu cruz o hablar bien de Dios con naturalidad)."
+      },
+      {
+        day: 12,
+        title: "Nuestra Señora de Guadalupe",
+        quote: "«¿No estoy yo aquí, que soy tu madre?» (A San Juan Diego)",
+        message: "La Virgen se apareció en el Tepeyac con el niño Jesús en su seno, recordándonos que Ella siempre nos lleva a su Hijo con ternura de madre.",
+        challenge: "Pon bajo el manto de la Virgen de Guadalupe aquello que más te preocupe en este momento."
+      },
+      {
+        day: 13,
+        isSunday: true,
+        title: "3er Domingo de Adviento · ¡Gaudete! (Alegraos)",
+        quote: "«Estad siempre alegres en el Señor; os lo repito, estad alegres. El Señor está cerca» (Flp 4, 4-5)",
+        message: "Hoy se enciende la vela ROSA de la corona. La alegría cristiana no es euforia pasajera, sino la certeza profunda de saberte amada por Dios.",
+        challenge: "🎟️ VALE DE GAUDETE: Haz hoy algo que te alegre el alma y comparte tu sonrisa con alguien que esté pasando un mal momento."
+      },
+      {
+        day: 14,
+        title: "San Juan de la Cruz: el amor que transforma",
+        quote: "«Al atardecer de la vida nos examinarán del amor» (San Juan de la Cruz)",
+        message: "Un gran místico español que nos enseña que, incluso cuando no «sentimos» nada al rezar, Dios sigue trabajando en silencio dentro de nosotros.",
+        challenge: "Reza hoy aunque tengas pocas ganas; esa oración hecha por pura fidelidad vale oro."
+      },
+      {
+        day: 15,
+        title: "Don de Ciencia",
+        quote: "«Los cielos proclaman la gloria de Dios» (Sal 19, 2)",
+        message: "El don de Ciencia te permite descubrir la huella de Dios en la creación, en las personas y en los acontecimientos de tu historia.",
+        challenge: "Busca hoy tres cosas concretas por las que dar gracias (un paisaje, una conversación, un detalle recibido)."
+      },
+      {
+        day: 16,
+        title: "Comienza la Novena de Navidad",
+        quote: "«¡Ven, Señor Jesús!» (Ap 22, 20)",
+        message: "Entramos en la recta final: los últimos 9 días antes de Nochebuena. La Iglesia intensifica su súplica: «Maranatha, ¡Ven, Señor!».",
+        challenge: "Si aún no lo has hecho, coloca el Niño Jesús (o prepara su lugar vacío) en el Belén de tu casa."
+      },
+      {
+        day: 17,
+        title: "Las raíces de Jesús",
+        quote: "«Libro de la genealogía de Jesucristo, hijo de David, hijo de Abrahán» (Mt 1, 1)",
+        message: "Hoy se lee la genealogía de Jesús. En su historia familiar hubo santos y pecadores, pero Dios escribió recto sobre renglones torcidos. También lo hace con tu historia.",
+        challenge: "Agradece hoy por tu familia, con sus luces y sus sombras, y reza por ellos."
+      },
+      {
+        day: 18,
+        title: "San José: el silencio que cuida",
+        quote: "«José, hijo de David, no temas acoger a María, tu mujer» (Mt 1, 20)",
+        message: "San José no pronuncia ni una sola palabra en los Evangelios, pero sus hechos lo dicen todo. Supo proteger, acompañar y confiar.",
+        challenge: "Practica hoy la escucha activa: escucha a alguien sin interrumpir ni mirar el reloj."
+      },
+      {
+        day: 19,
+        title: "Don de Piedad",
+        quote: "«El Espíritu mismo da testimonio a nuestro espíritu de que somos hijos de Dios» (Rom 8, 16)",
+        message: "El don de Piedad transforma nuestra relación con Dios: pasamos de tratarlo como un jefe lejano a llamarlo «Abbá, Papá» con total confianza.",
+        challenge: "Reza hoy el Padrenuestro muy despacio, saboreando cada frase."
+      },
+      {
+        day: 20,
+        isSunday: true,
+        title: "4º Domingo de Adviento · Emmanuel, Dios con nosotros",
+        quote: "«Mirad: la Virgen concebirá y dará a luz un hijo, y le pondrá por nombre Emmanuel, que significa Dios-con-nosotros» (Mt 1, 23)",
+        message: "Las cuatro velas de la corona ya arden juntas. Falta muy poco. Como padrino/madrina, doy gracias a Dios por verte crecer en la fe este año.",
+        challenge: "Prepara tu corazón para la Navidad: si puedes, acércate al sacramento de la Confesión estos días."
+      },
+      {
+        day: 21,
+        title: "La Visitación: llevar a Jesús a otros",
+        quote: "«En cuanto oyó Isabel el saludo de María, saltó la criatura en su vientre» (Lc 1, 41)",
+        message: "En cuanto María recibe a Jesús, sale deprisa a servir a su prima Isabel. Quien tiene al Espíritu Santo no se queda encerrado en sí mismo.",
+        challenge: "Llama o visita hoy a algún familiar mayor o a alguien que pueda sentirse solo en estas fechas."
+      },
+      {
+        day: 22,
+        title: "El Magnificat: el canto de los humildes",
+        quote: "«Proclama mi alma la grandeza del Señor, se alegra mi espíritu en Dios, mi salvador» (Lc 1, 46-47)",
+        message: "María canta las maravillas que Dios ha hecho en ella. Tú también tienes motivos inmensos para cantar tu propio Magnificat después de este año.",
+        challenge: "Escribe en una nota 3 regalos espirituales que Dios te haya hecho este 2026."
+      },
+      {
+        day: 23,
+        title: "Don de Temor de Dios",
+        quote: "«El principio de la sabiduría es el temor del Señor» (Prov 9, 10)",
+        message: "No es miedo a Dios, sino el respeto amoroso del hijo que no quiere entristecer a quien tanto le ama. Es cuidar la amistad con Jesús como el mayor tesoro.",
+        challenge: "Cuida hoy tus palabras: evita cualquier crítica o comentario negativo sobre los demás."
+      },
+      {
+        day: 24,
+        isSunday: true,
+        title: "Nochebuena · ¡Ha llegado la Luz!",
+        quote: "«Hoy, en la ciudad de David, os ha nacido un Salvador, el Mesías, el Señor» (Lc 2, 11)",
+        message: "¡Feliz Nochebuena, ahijada! Esta noche se cumple la promesa. Que el Niño de Belén llene de paz tu casa y que el Espíritu Santo que recibiste el 20 de noviembre siga guiando cada uno de tus pasos. ¡Cuenta siempre conmigo!",
+        challenge: "🎄 REGALO DE NOCHEBUENA: Cuando vayas a la Misa del Gallo (o al besar al Niño Jesús), pide una gracia especial para este nuevo año. ¡Feliz Navidad!"
+      }
+    ];
+
+    const grid = document.getElementById('calendar-grid');
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    // Encender velas de la Corona de Adviento 2026 (29 nov, 6 dic, 13 dic, 20 dic)
+    const candleDates = [
+      new Date(2026, 10, 29), // 29 Nov
+      new Date(2026, 11, 6),  // 6 Dic
+      new Date(2026, 11, 13), // 13 Dic
+      new Date(2026, 11, 20)  // 20 Dic
+    ];
+    candleDates.forEach((cDate, idx) => {
+      if (isPreview || today >= cDate) {
+        document.getElementById(`candle-${idx + 1}`).classList.add('lit');
+      }
+    });
+
+    // Progreso guardado en navegador
+    let openedDays = JSON.parse(localStorage.getItem('adviento2026_dic') || '[]');
+
+    function updateProgress() {
+      const count = openedDays.length;
+      document.getElementById('progress-text').innerText = `${count} de 24 ventanas abiertas`;
+      document.getElementById('progress-fill').style.width = `${(count / 24) * 100}%`;
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3200);
+    }
+
+    // Construir las 24 ventanas
+    adventDays.forEach((item) => {
+      const doorDate = new Date(2026, 11, item.day); // Mes 11 = Diciembre
+      const isAvailable = isPreview || today >= doorDate;
+      const isOpened = openedDays.includes(item.day);
+
+      const door = document.createElement('div');
+      door.className = `door ${isAvailable ? 'available' : ''} ${item.isSunday ? 'sunday' : ''} ${isOpened ? 'opened' : ''}`;
+
+      door.innerHTML = `
+        <span class="door-top">${item.day === 24 ? 'Nochebuena' : (item.isSunday ? 'Especial' : 'Diciembre')}</span>
+        <span class="door-number">${item.day}</span>
+        <span class="door-status">
+          ${isAvailable ? (isOpened ? '✓ Abierta' : '✨ Abrir') : '🔒 Cerrada'}
+        </span>
+      `;
+
+      door.onclick = () => {
+        if (!isAvailable) {
+          showToast(`🕯️ El Adviento es espera: esta ventana se abrirá el ${item.day} de diciembre.`);
+          return;
+        }
+        openModal(item, door);
+      };
+
+      grid.appendChild(door);
+    });
+
+    updateProgress();
+
+    function openModal(item, doorEl) {
+      document.getElementById('modal-tag').innerText = `${item.day} de Diciembre · Adviento 2026`;
+      document.getElementById('modal-title').innerText = item.title;
+      document.getElementById('modal-quote').innerText = item.quote;
+      document.getElementById('modal-message').innerText = item.message;
+      document.getElementById('modal-challenge').innerText = item.challenge;
+      document.getElementById('modal').style.display = 'flex';
+
+      if (!openedDays.includes(item.day)) {
+        openedDays.push(item.day);
+        localStorage.setItem('adviento2026_dic', JSON.stringify(openedDays));
+        doorEl.classList.add('opened');
+        doorEl.querySelector('.door-status').innerText = '✓ Abierta';
+        updateProgress();
+      }
+    }
+
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+
+    function handleOverlayClick(e) {
+      if (e.target.id === 'modal') closeModal();
+    }
+
+    // Animación sutil de copos de nieve y estrellas
+    const canvas = document.getElementById('snow-canvas');
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    const flakes = Array.from({ length: 55 }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      r: Math.random() * 2.2 + 0.6,
+      speedY: Math.random() * 0.55 + 0.2,
+      speedX: (Math.random() - 0.5) * 0.3,
+      alpha: Math.random() * 0.5 + 0.2
+    }));
+
+    function animateSnow() {
+      ctx.clearRect(0, 0, width, height);
+      flakes.forEach(f => {
+        ctx.beginPath();
+        ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 248, 230, ${f.alpha})`;
+        ctx.fill();
+
+        f.y += f.speedY;
+        f.x += f.speedX;
+        if (f.y > height) { f.y = -5; f.x = Math.random() * width; }
+        if (f.x > width) f.x = 0;
+        if (f.x < 0) f.x = width;
+      });
+      requestAnimationFrame(animateSnow);
+    }
+    animateSnow();
+  </script>
+</body>
+</html>
