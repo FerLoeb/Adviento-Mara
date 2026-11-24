@@ -183,7 +183,7 @@
       transition: width 0.5s ease;
     }
 
-    /* Cuadrícula de 24 días */
+    /* Cuadrícula de Adviento (26 días) */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
@@ -458,7 +458,7 @@
       <h1>Camino a Belén</h1>
       <p class="subtitle">
         ¡Hola Mara! El <strong>20 de noviembre</strong> el Espíritu Santo entró en ti.
-        Ahora caminamos juntos hacia la Navidad. Abre una ventana cada día de diciembre para preparar el pesebre de tu corazón!
+        Ahora caminamos juntos hacia la Navidad desde el <strong>primer domingo de Adviento</strong>. ¡Abre una ventana cada día para preparar el pesebre de tu corazón!
       </p>
 
       <!-- Corona de Adviento dinámica -->
@@ -486,7 +486,7 @@
       </div>
 
       <div class="progress-wrapper">
-        <div class="progress-text" id="progress-text">0 de 24 ventanas abiertas</div>
+        <div class="progress-text" id="progress-text">0 de 26 ventanas abiertas</div>
         <div class="progress-track">
           <div class="progress-fill" id="progress-fill"></div>
         </div>
@@ -506,7 +506,7 @@
   <!-- Modal -->
   <div class="modal-overlay" id="modal" onclick="handleOverlayClick(event)">
     <div class="modal-card">
-      <div class="modal-date-tag" id="modal-tag">1 de Diciembre</div>
+      <div class="modal-date-tag" id="modal-tag">29 de Noviembre</div>
       <h2 id="modal-title">Título</h2>
       <div class="scripture-box" id="modal-quote"></div>
       <p class="reflection-text" id="modal-message"></p>
@@ -519,19 +519,43 @@
   </div>
 
   <script>
-    // Añade ?preview=true al final de la URL de Vercel para previsualizar todos los días abiertos
+    // Añade ?preview=true al final de la URL para previsualizar todos los días abiertos
     const isPreview = new URLSearchParams(window.location.search).get('preview') === 'true';
 
-    // Contenido completo del 1 al 24 de diciembre de 2026
+    // Contenido completo del 29 de noviembre al 24 de diciembre de 2026 (26 días de Adviento)
+    // month: 10 = Noviembre, month: 11 = Diciembre (formato Date de JS)
     const adventDays = [
       {
+        id: "11-29",
+        month: 10,
+        day: 29,
+        isSunday: true,
+        title: "1er Domingo de Adviento · ¡Comienza la espera!",
+        quote: "«Velad, pues no sabéis cuándo vendrá el dueño de la casa» (Mc 13, 35)",
+        message: "¡Hoy empieza oficialmente el Adviento y un nuevo año litúrgico! Encendemos la primera vela de la corona. Hace apenas nueve días recibiste el Espíritu Santo en tu Confirmación; ahora estrenas este tiempo de esperanza con el corazón recién ungido.",
+        challenge: "Enciende hoy (en familia o en tu oración) la primera vela de Adviento y pide a Jesús empezar este camino con ojos despiertos."
+      },
+      {
+        id: "11-30",
+        month: 10,
+        day: 30,
+        title: "San Andrés Apóstol: dejar las redes para seguirle",
+        quote: "«Inmediatamente dejaron las redes y le siguieron» (Mc 1, 18)",
+        message: "Cerramos noviembre celebrando a San Andrés, el primer apóstol llamado por Jesús y el primero en llevar a su hermano Pedro hasta Él. Quien se encuentra con Cristo siente enseguida el deseo de compartirlo.",
+        challenge: "Piensa en alguien cercano (un amigo o familiar) por quien vas a rezar especialmente durante todo este Adviento."
+      },
+      {
+        id: "12-1",
+        month: 11,
         day: 1,
         title: "El fuego que ya llevas dentro",
         quote: "«Te recomiendo que reavives el don de Dios que hay en ti por la imposición de mis manos» (2 Tim 1, 6)",
-        message: "Empieza diciembre. Hace apenas unos días recibiste el sello del Espíritu Santo. El Adviento no es esperar algo lejano, sino dejar que ese fuego que ya habita en ti ilumine tu día a día.",
-        challenge: "Dedica 3 minutos esta noche a dar gracias por tu Confirmación y pide al Espíritu Santo vivir este mes con ilusión."
+        message: "Entramos en diciembre. El sello del Espíritu Santo ya habita en ti. El Adviento no es esperar algo lejano, sino dejar que ese fuego que recibiste el 20 de noviembre ilumine cada día de este mes.",
+        challenge: "Dedica 3 minutos esta noche a dar gracias por tu Confirmación y pide al Espíritu Santo vivir diciembre con ilusión."
       },
       {
+        id: "12-2",
+        month: 11,
         day: 2,
         title: "Don de Sabiduría: mirar con los ojos de Dios",
         quote: "«Enséñanos a calcular nuestros años, para que adquiramos un corazón sensato» (Sal 90, 12)",
@@ -539,6 +563,8 @@
         challenge: "Hoy, antes de mirar el móvil por la mañana, ofrece tu día con una oración breve: «Ven, Espíritu Santo»."
       },
       {
+        id: "12-3",
+        month: 11,
         day: 3,
         title: "San Francisco Javier: un corazón sin fronteras",
         quote: "«Id al mundo entero y proclamad el Evangelio» (Mc 16, 15)",
@@ -546,6 +572,8 @@
         challenge: "Reza hoy por los misioneros y por algún amigo que esté lejos de la fe."
       },
       {
+        id: "12-4",
+        month: 11,
         day: 4,
         title: "Preparar el camino",
         quote: "«Preparad el camino del Señor, allanad sus senderos» (Lc 3, 4)",
@@ -553,6 +581,8 @@
         challenge: "Piensa si hay alguien con quien necesites tener un gesto de cercanía o reconciliación esta semana."
       },
       {
+        id: "12-5",
+        month: 11,
         day: 5,
         title: "Don de Entendimiento",
         quote: "«Abre mis ojos, y contemplaré las maravillas de tu voluntad» (Sal 119, 18)",
@@ -560,6 +590,8 @@
         challenge: "Lee despacio el Evangelio de hoy (aunque sean 5 versículos) y quédate con una sola palabra."
       },
       {
+        id: "12-6",
+        month: 11,
         day: 6,
         isSunday: true,
         title: "2º Domingo de Adviento · La voz en el desierto",
@@ -568,6 +600,8 @@
         challenge: "🎟️ VALE ESPECIAL DE DOMINGO: Tienes un café/chocolate caliente pagado conmigo esta semana para charlar de cómo vas."
       },
       {
+        id: "12-7",
+        month: 11,
         day: 7,
         title: "San Ambrosio: el maestro que supo esperar",
         quote: "«La fe es el fundamento de lo que se espera» (Heb 11, 1)",
@@ -575,6 +609,8 @@
         challenge: "Reza hoy una Avemaría por nuestro párroco, tus catequistas y el grupo con el que te confirmaste."
       },
       {
+        id: "12-8",
+        month: 11,
         day: 8,
         isSunday: true,
         title: "Inmaculada Concepción: el «Sí» que lo cambió todo",
@@ -583,6 +619,8 @@
         challenge: "Visita una iglesia hoy (es fiesta de precepto) y regálale a la Virgen una flor o una oración personal."
       },
       {
+        id: "12-9",
+        month: 11,
         day: 9,
         title: "Don de Consejo",
         quote: "«Tu palabra es lámpara para mis pasos, luz en mi sendero» (Sal 119, 105)",
@@ -590,6 +628,8 @@
         challenge: "Antes de tomar una decisión hoy, haz una pausa de 10 segundos y pregunta: «Señor, ¿qué harías Tú?»."
       },
       {
+        id: "12-10",
+        month: 11,
         day: 10,
         title: "La humildad de lo pequeño",
         quote: "«El que es fiel en lo poco, lo es también en lo mucho» (Lc 16, 10)",
@@ -597,6 +637,8 @@
         challenge: "Haz hoy una tarea en casa que nadie te haya pedido y sin decir que la has hecho tú."
       },
       {
+        id: "12-11",
+        month: 11,
         day: 11,
         title: "Don de Fortaleza",
         quote: "«Todo lo puedo en aquel que me conforta» (Flp 4, 13)",
@@ -604,6 +646,8 @@
         challenge: "No te avergüences hoy de mostrar tu fe (bendecir la mesa, llevar tu cruz o hablar bien de Dios con naturalidad)."
       },
       {
+        id: "12-12",
+        month: 11,
         day: 12,
         title: "Nuestra Señora de Guadalupe",
         quote: "«¿No estoy yo aquí, que soy tu madre?» (A San Juan Diego)",
@@ -611,6 +655,8 @@
         challenge: "Pon bajo el manto de la Virgen de Guadalupe aquello que más te preocupe en este momento."
       },
       {
+        id: "12-13",
+        month: 11,
         day: 13,
         isSunday: true,
         title: "3er Domingo de Adviento · ¡Gaudete! (Alegraos)",
@@ -619,6 +665,8 @@
         challenge: "🎟️ VALE DE GAUDETE: Haz hoy algo que te alegre el alma y comparte tu sonrisa con alguien que esté pasando un mal momento."
       },
       {
+        id: "12-14",
+        month: 11,
         day: 14,
         title: "San Juan de la Cruz: el amor que transforma",
         quote: "«Al atardecer de la vida nos examinarán del amor» (San Juan de la Cruz)",
@@ -626,6 +674,8 @@
         challenge: "Reza hoy aunque tengas pocas ganas; esa oración hecha por pura fidelidad vale oro."
       },
       {
+        id: "12-15",
+        month: 11,
         day: 15,
         title: "Don de Ciencia",
         quote: "«Los cielos proclaman la gloria de Dios» (Sal 19, 2)",
@@ -633,6 +683,8 @@
         challenge: "Busca hoy tres cosas concretas por las que dar gracias (un paisaje, una conversación, un detalle recibido)."
       },
       {
+        id: "12-16",
+        month: 11,
         day: 16,
         title: "Comienza la Novena de Navidad",
         quote: "«¡Ven, Señor Jesús!» (Ap 22, 20)",
@@ -640,6 +692,8 @@
         challenge: "Si aún no lo has hecho, coloca el Niño Jesús (o prepara su lugar vacío) en el Belén de tu casa."
       },
       {
+        id: "12-17",
+        month: 11,
         day: 17,
         title: "Las raíces de Jesús",
         quote: "«Libro de la genealogía de Jesucristo, hijo de David, hijo de Abrahán» (Mt 1, 1)",
@@ -647,6 +701,8 @@
         challenge: "Agradece hoy por tu familia, con sus luces y sus sombras, y reza por ellos."
       },
       {
+        id: "12-18",
+        month: 11,
         day: 18,
         title: "San José: el silencio que cuida",
         quote: "«José, hijo de David, no temas acoger a María, tu mujer» (Mt 1, 20)",
@@ -654,6 +710,8 @@
         challenge: "Practica hoy la escucha activa: escucha a alguien sin interrumpir ni mirar el reloj."
       },
       {
+        id: "12-19",
+        month: 11,
         day: 19,
         title: "Don de Piedad",
         quote: "«El Espíritu mismo da testimonio a nuestro espíritu de que somos hijos de Dios» (Rom 8, 16)",
@@ -661,14 +719,18 @@
         challenge: "Reza hoy el Padrenuestro muy despacio, saboreando cada frase."
       },
       {
+        id: "12-20",
+        month: 11,
         day: 20,
         isSunday: true,
         title: "4º Domingo de Adviento · Emmanuel, Dios con nosotros",
         quote: "«Mirad: la Virgen concebirá y dará a luz un hijo, y le pondrá por nombre Emmanuel, que significa Dios-con-nosotros» (Mt 1, 23)",
-        message: "Las cuatro velas de la corona ya arden juntas. Falta muy poco. Como padrino/madrina, doy gracias a Dios por verte crecer en la fe este año.",
+        message: "Las cuatro velas de la corona ya arden juntas. Falta muy poco. Como tu padrino, doy gracias a Dios por verte crecer en la fe este año.",
         challenge: "Prepara tu corazón para la Navidad: si puedes, acércate al sacramento de la Confesión estos días."
       },
       {
+        id: "12-21",
+        month: 11,
         day: 21,
         title: "La Visitación: llevar a Jesús a otros",
         quote: "«En cuanto oyó Isabel el saludo de María, saltó la criatura en su vientre» (Lc 1, 41)",
@@ -676,6 +738,8 @@
         challenge: "Llama o visita hoy a algún familiar mayor o a alguien que pueda sentirse solo en estas fechas."
       },
       {
+        id: "12-22",
+        month: 11,
         day: 22,
         title: "El Magnificat: el canto de los humildes",
         quote: "«Proclama mi alma la grandeza del Señor, se alegra mi espíritu en Dios, mi salvador» (Lc 1, 46-47)",
@@ -683,6 +747,8 @@
         challenge: "Escribe en una nota 3 regalos espirituales que Dios te haya hecho este 2026."
       },
       {
+        id: "12-23",
+        month: 11,
         day: 23,
         title: "Don de Temor de Dios",
         quote: "«El principio de la sabiduría es el temor del Señor» (Prov 9, 10)",
@@ -690,6 +756,8 @@
         challenge: "Cuida hoy tus palabras: evita cualquier crítica o comentario negativo sobre los demás."
       },
       {
+        id: "12-24",
+        month: 11,
         day: 24,
         isSunday: true,
         title: "Nochebuena · ¡Ha llegado la Luz!",
@@ -702,6 +770,7 @@
     const grid = document.getElementById('calendar-grid');
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const totalDoors = adventDays.length;
 
     // Encender velas de la Corona de Adviento 2026 (29 nov, 6 dic, 13 dic, 20 dic)
     const candleDates = [
@@ -717,12 +786,12 @@
     });
 
     // Progreso guardado en navegador
-    let openedDays = JSON.parse(localStorage.getItem('adviento2026_dic') || '[]');
+    let openedDays = JSON.parse(localStorage.getItem('adviento2026_completo') || '[]');
 
     function updateProgress() {
       const count = openedDays.length;
-      document.getElementById('progress-text').innerText = `${count} de 24 ventanas abiertas`;
-      document.getElementById('progress-fill').style.width = `${(count / 24) * 100}%`;
+      document.getElementById('progress-text').innerText = `${count} de ${totalDoors} ventanas abiertas`;
+      document.getElementById('progress-fill').style.width = `${(count / totalDoors) * 100}%`;
     }
 
     function showToast(msg) {
@@ -732,17 +801,25 @@
       setTimeout(() => toast.classList.remove('show'), 3200);
     }
 
-    // Construir las 24 ventanas
+    // Construir las 26 ventanas (29 nov - 24 dic)
     adventDays.forEach((item) => {
-      const doorDate = new Date(2026, 11, item.day); // Mes 11 = Diciembre
+      const doorDate = new Date(2026, item.month, item.day);
       const isAvailable = isPreview || today >= doorDate;
-      const isOpened = openedDays.includes(item.day);
+      const isOpened = openedDays.includes(item.id);
+      const monthName = item.month === 10 ? 'Noviembre' : 'Diciembre';
 
       const door = document.createElement('div');
       door.className = `door ${isAvailable ? 'available' : ''} ${item.isSunday ? 'sunday' : ''} ${isOpened ? 'opened' : ''}`;
 
+      let topLabel = monthName;
+      if (item.month === 11 && item.day === 24) {
+        topLabel = 'Nochebuena';
+      } else if (item.isSunday) {
+        topLabel = `Especial · ${item.month === 10 ? 'Nov' : 'Dic'}`;
+      }
+
       door.innerHTML = `
-        <span class="door-top">${item.day === 24 ? 'Nochebuena' : (item.isSunday ? 'Especial' : 'Diciembre')}</span>
+        <span class="door-top">${topLabel}</span>
         <span class="door-number">${item.day}</span>
         <span class="door-status">
           ${isAvailable ? (isOpened ? '✓ Abierta' : '✨ Abrir') : '🔒 Cerrada'}
@@ -751,7 +828,7 @@
 
       door.onclick = () => {
         if (!isAvailable) {
-          showToast(`🕯️ El Adviento es espera: esta ventana se abrirá el ${item.day} de diciembre.`);
+          showToast(`🕯️ El Adviento es espera: esta ventana se abrirá el ${item.day} de ${monthName.toLowerCase()}.`);
           return;
         }
         openModal(item, door);
@@ -763,16 +840,17 @@
     updateProgress();
 
     function openModal(item, doorEl) {
-      document.getElementById('modal-tag').innerText = `${item.day} de Diciembre · Adviento 2026`;
+      const monthName = item.month === 10 ? 'Noviembre' : 'Diciembre';
+      document.getElementById('modal-tag').innerText = `${item.day} de ${monthName} · Adviento 2026`;
       document.getElementById('modal-title').innerText = item.title;
       document.getElementById('modal-quote').innerText = item.quote;
       document.getElementById('modal-message').innerText = item.message;
       document.getElementById('modal-challenge').innerText = item.challenge;
       document.getElementById('modal').style.display = 'flex';
 
-      if (!openedDays.includes(item.day)) {
-        openedDays.push(item.day);
-        localStorage.setItem('adviento2026_dic', JSON.stringify(openedDays));
+      if (!openedDays.includes(item.id)) {
+        openedDays.push(item.id);
+        localStorage.setItem('adviento2026_completo', JSON.stringify(openedDays));
         doorEl.classList.add('opened');
         doorEl.querySelector('.door-status').innerText = '✓ Abierta';
         updateProgress();
