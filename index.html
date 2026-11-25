@@ -6,7 +6,7 @@
   <title>Camino a Belén · Adviento 2026</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg-deep: #0d0b14;
@@ -21,6 +21,7 @@
       --purple-advent: #8a5cf5;
       --text-main: #f5f2eb;
       --text-muted: #b8b0c4;
+      --track-border: rgba(230, 190, 116, 0.45);
     }
 
     * {
@@ -208,7 +209,6 @@
       overflow: hidden;
     }
 
-    /* Marco interior tipo vidriera/puerta */
     .door::before {
       content: "";
       position: absolute;
@@ -309,12 +309,12 @@
       opacity: 1;
     }
 
-    /* Modal elegante */
+    /* Modal estilo ficha "TRACK" (Texto + Reto) */
     .modal-overlay {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(8, 6, 14, 0.84);
+      background: rgba(8, 6, 14, 0.86);
       backdrop-filter: blur(8px);
       align-items: center;
       justify-content: center;
@@ -329,14 +329,14 @@
     }
 
     .modal-card {
-      background: linear-gradient(165deg, #241c38 0%, #171224 100%);
-      border: 1.5px solid var(--gold);
-      border-radius: 24px;
-      max-width: 520px;
+      background: linear-gradient(165deg, #241c38 0%, #151022 100%);
+      border: 2px solid var(--gold);
+      border-radius: 16px;
+      max-width: 480px;
       width: 100%;
-      padding: 34px 30px;
+      padding: 22px;
       position: relative;
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(230, 190, 116, 0.12);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75), 0 0 40px rgba(230, 190, 116, 0.14);
       transform: scale(0.95);
       animation: popIn 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     }
@@ -345,70 +345,120 @@
       to { transform: scale(1); }
     }
 
-    .modal-date-tag {
-      font-size: 0.78rem;
+    /* Rejilla interior estilo tarjeta Track */
+    .track-sheet {
+      border: 2px solid var(--track-border);
+      border-radius: 8px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .track-header {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      border-bottom: 2px solid var(--track-border);
+    }
+
+    .track-number-box {
+      padding: 12px 18px;
+      border-right: 2px solid var(--track-border);
+      font-weight: 800;
+      font-size: 1.15rem;
+      letter-spacing: 0.8px;
       text-transform: uppercase;
-      letter-spacing: 1.5px;
-      color: var(--gold);
+      color: var(--gold-bright);
+      background: rgba(230, 190, 116, 0.08);
+      display: flex;
+      align-items: center;
+    }
+
+    .track-date-box {
+      padding: 12px 16px;
+      font-size: 0.82rem;
       font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .track-body {
+      padding: 22px 20px;
+      border-bottom: 2px solid var(--track-border);
+      max-height: 52vh;
+      overflow-y: auto;
+    }
+
+    .track-body p {
+      font-size: 0.98rem;
+      line-height: 1.65;
+      color: #f0ecf5;
+      margin-bottom: 14px;
+    }
+
+    .track-body p:last-child {
+      margin-bottom: 0;
+    }
+
+    .track-challenge-box {
+      padding: 18px 20px;
+      border-bottom: 2px solid var(--track-border);
+      background: rgba(230, 190, 116, 0.09);
+    }
+
+    .track-challenge-label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      color: var(--gold);
       margin-bottom: 6px;
     }
 
-    .modal-card h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.65rem;
-      color: var(--gold-bright);
-      margin-bottom: 18px;
-      line-height: 1.25;
-    }
-
-    .scripture-box {
-      font-family: 'Playfair Display', serif;
-      font-style: italic;
+    .track-challenge-text {
       font-size: 1.05rem;
-      line-height: 1.55;
-      color: #fff8eb;
-      background: rgba(230, 190, 116, 0.08);
-      border-left: 3px solid var(--gold);
-      padding: 14px 18px;
-      border-radius: 0 12px 12px 0;
-      margin-bottom: 18px;
-    }
-
-    .reflection-text {
-      font-size: 0.96rem;
-      line-height: 1.68;
-      color: #e2dce8;
-      margin-bottom: 20px;
-    }
-
-    .purpose-box {
-      background: rgba(105, 229, 194, 0.09);
-      border: 1px solid rgba(105, 229, 194, 0.28);
-      border-radius: 14px;
-      padding: 15px 18px;
-      font-size: 0.92rem;
-      line-height: 1.55;
-      color: #d6fff3;
-    }
-
-    .purpose-box strong {
-      color: #69e5c2;
-      display: block;
-      margin-bottom: 4px;
-      font-size: 0.8rem;
+      font-weight: 800;
+      line-height: 1.38;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.4px;
+      color: var(--gold-bright);
+    }
+
+    .track-footer {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .track-footer-brand {
+      padding: 10px 16px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .track-footer-icon {
+      padding: 10px 16px;
+      border-left: 2px solid var(--track-border);
+      font-weight: 800;
+      font-size: 0.9rem;
+      color: var(--gold);
     }
 
     .btn-close {
-      margin-top: 24px;
+      margin-top: 16px;
       width: 100%;
-      padding: 14px;
+      padding: 13px;
       background: linear-gradient(90deg, var(--gold), #d4a34e);
       color: #161122;
       border: none;
-      border-radius: 12px;
+      border-radius: 10px;
       font-family: 'Plus Jakarta Sans', sans-serif;
       font-weight: 700;
       font-size: 0.95rem;
@@ -445,6 +495,12 @@
         gap: 14px;
         padding: 12px 18px;
       }
+      .modal-card {
+        padding: 16px;
+      }
+      .track-body {
+        padding: 16px;
+      }
     }
   </style>
 </head>
@@ -458,7 +514,7 @@
       <h1>Camino a Belén</h1>
       <p class="subtitle">
         ¡Hola Mara! El <strong>20 de noviembre</strong> el Espíritu Santo entró en ti.
-        Ahora caminamos juntos hacia la Navidad desde el <strong>primer domingo de Adviento</strong>. ¡Abre una ventana cada día para preparar el pesebre de tu corazón!
+        Ahora caminamos juntos hacia la Navidad desde el <strong>primer domingo de Adviento</strong>. ¡Abre una ventana cada día para descubrir tu Track y tu reto!
       </p>
 
       <!-- Corona de Adviento dinámica -->
@@ -503,16 +559,23 @@
   <!-- Aviso flotante -->
   <div class="toast" id="toast"></div>
 
-  <!-- Modal -->
+  <!-- Modal estilo Track (Texto + Reto) -->
   <div class="modal-overlay" id="modal" onclick="handleOverlayClick(event)">
     <div class="modal-card">
-      <div class="modal-date-tag" id="modal-tag">29 de Noviembre</div>
-      <h2 id="modal-title">Título</h2>
-      <div class="scripture-box" id="modal-quote"></div>
-      <p class="reflection-text" id="modal-message"></p>
-      <div class="purpose-box">
-        <strong>Propósito de hoy</strong>
-        <span id="modal-challenge"></span>
+      <div class="track-sheet">
+        <div class="track-header">
+          <div class="track-number-box" id="modal-track">TRACK 1</div>
+          <div class="track-date-box" id="modal-date">29 DE NOVIEMBRE</div>
+        </div>
+        <div class="track-body" id="modal-body"></div>
+        <div class="track-challenge-box">
+          <span class="track-challenge-label">Reto de hoy</span>
+          <div class="track-challenge-text" id="modal-challenge"></div>
+        </div>
+        <div class="track-footer">
+          <div class="track-footer-brand">Camino a Belén · Adviento</div>
+          <div class="track-footer-icon">✦</div>
+        </div>
       </div>
       <button class="btn-close" onclick="closeModal()">Guardar en el corazón</button>
     </div>
@@ -522,248 +585,222 @@
     // Añade ?preview=true al final de la URL para previsualizar todos los días abiertos
     const isPreview = new URLSearchParams(window.location.search).get('preview') === 'true';
 
-    // Contenido completo del 29 de noviembre al 24 de diciembre de 2026 (26 días de Adviento)
-    // month: 10 = Noviembre, month: 11 = Diciembre (formato Date de JS)
+    // Estructura Track (Texto + Reto) del 29 de noviembre al 24 de diciembre de 2026
+    // Usa \n\n en "text" para separar párrafos como en la ficha
     const adventDays = [
       {
         id: "11-29",
+        track: 1,
         month: 10,
         day: 29,
         isSunday: true,
-        title: "1er Domingo de Adviento · ¡Comienza la espera!",
-        quote: "«Velad, pues no sabéis cuándo vendrá el dueño de la casa» (Mc 13, 35)",
-        message: "¡Hoy empieza oficialmente el Adviento y un nuevo año litúrgico! Encendemos la primera vela de la corona. Hace apenas nueve días recibiste el Espíritu Santo en tu Confirmación; ahora estrenas este tiempo de esperanza con el corazón recién ungido.",
-        challenge: "Enciende hoy (en familia o en tu oración) la primera vela de Adviento y pide a Jesús empezar este camino con ojos despiertos."
+        text: "Desde pequeños, nos educan para dar gracias, pero se trata de que hoy puedas dedicar un tiempo para que el agradecimiento sea más profundo.\n\nReconocer todas las cosas que se nos han dado gratuitamente: una familia, un cuerpo, capacidad de amar, etc.\n\nCuando el agradecimiento es profundo genera una conciencia de endeudamiento. Pídele a Dios que en esos 10 minutos las gracias salgan de un corazón agradecido.",
+        challenge: "HOY DEDICA 10 MINUTOS A DAR GRACIAS"
       },
       {
         id: "11-30",
+        track: 2,
         month: 10,
         day: 30,
-        title: "San Andrés Apóstol: dejar las redes para seguirle",
-        quote: "«Inmediatamente dejaron las redes y le siguieron» (Mc 1, 18)",
-        message: "Cerramos noviembre celebrando a San Andrés, el primer apóstol llamado por Jesús y el primero en llevar a su hermano Pedro hasta Él. Quien se encuentra con Cristo siente enseguida el deseo de compartirlo.",
-        challenge: "Piensa en alguien cercano (un amigo o familiar) por quien vas a rezar especialmente durante todo este Adviento."
+        text: "Cerramos noviembre celebrando a San Andrés, el primer apóstol llamado por Jesús y el primero en llevar a su hermano Pedro hasta Él.\n\nCuando uno se encuentra de verdad con Cristo, siente enseguida el deseo de compartirlo con los que más quiere, sin discursos complicados, simplemente invitando a ver.",
+        challenge: "REZA HOY POR UN AMIGO QUE QUIERAS ACERCAR A DIOS"
       },
       {
         id: "12-1",
+        track: 3,
         month: 11,
         day: 1,
-        title: "El fuego que ya llevas dentro",
-        quote: "«Te recomiendo que reavives el don de Dios que hay en ti por la imposición de mis manos» (2 Tim 1, 6)",
-        message: "Entramos en diciembre. El sello del Espíritu Santo ya habita en ti. El Adviento no es esperar algo lejano, sino dejar que ese fuego que recibiste el 20 de noviembre ilumine cada día de este mes.",
-        challenge: "Dedica 3 minutos esta noche a dar gracias por tu Confirmación y pide al Espíritu Santo vivir diciembre con ilusión."
+        text: "Entramos en diciembre. Hace apenas unos días recibiste el sello del Espíritu Santo en tu Confirmación.\n\nEl Adviento no consiste en esperar algo lejano que no tenemos, sino en dejar que ese fuego que ya habita dentro de ti vaya iluminando tu día a día.",
+        challenge: "DEDICA 3 MINUTOS ESTA NOCHE A REZAR AL ESPÍRITU SANTO"
       },
       {
         id: "12-2",
+        track: 4,
         month: 11,
         day: 2,
-        title: "Don de Sabiduría: mirar con los ojos de Dios",
-        quote: "«Enséñanos a calcular nuestros años, para que adquiramos un corazón sensato» (Sal 90, 12)",
-        message: "Diciembre suele llenarse de prisas, compras y ruido. El don de Sabiduría te ayuda a distinguir lo verdaderamente importante de lo superficial.",
-        challenge: "Hoy, antes de mirar el móvil por la mañana, ofrece tu día con una oración breve: «Ven, Espíritu Santo»."
+        text: "Diciembre suele llenarse de prisas, compras y ruido exterior.\n\nEl don de Sabiduría que recibiste nos ayuda a mirar las cosas con los ojos de Dios y distinguir lo verdaderamente importante de lo superficial.",
+        challenge: "ANTES DE MIRAR EL MÓVIL POR LA MAÑANA, OFRECE TU DÍA A DIOS"
       },
       {
         id: "12-3",
+        track: 5,
         month: 11,
         day: 3,
-        title: "San Francisco Javier: un corazón sin fronteras",
-        quote: "«Id al mundo entero y proclamad el Evangelio» (Mc 16, 15)",
-        message: "Hoy celebramos a San Francisco Javier, un joven que lo dejó todo para llevar a Jesús hasta Oriente. Ser confirmada es ser misionera justo donde estás: en tu familia, con tus amigos, en tus estudios o trabajo.",
-        challenge: "Reza hoy por los misioneros y por algún amigo que esté lejos de la fe."
+        text: "Hoy celebramos a San Francisco Javier, un joven que lo dejó todo para llevar a Jesús hasta los confines de Oriente.\n\nSer confirmada es ser misionera justo donde estás: en tu familia, con tus amigos, en tus estudios o trabajo.",
+        challenge: "TEN HOY UN GESTO VALIENTE DE FE CON NATURALIDAD"
       },
       {
         id: "12-4",
+        track: 6,
         month: 11,
         day: 4,
-        title: "Preparar el camino",
-        quote: "«Preparad el camino del Señor, allanad sus senderos» (Lc 3, 4)",
-        message: "Para que Jesús nazca con fuerza esta Navidad en tu vida, hace falta quitar piedras del camino: algún rencor guardado, la pereza espiritual o el desánimo.",
-        challenge: "Piensa si hay alguien con quien necesites tener un gesto de cercanía o reconciliación esta semana."
+        text: "«Preparad el camino del Señor, allanad sus senderos».\n\nPara que Jesús nazca con fuerza esta Navidad en tu corazón, hace falta quitar las piedras que estorban: algún rencor guardado, la pereza espiritual o el desánimo.",
+        challenge: "DA EL PRIMER PASO CON ALGUIEN CON QUIEN TENGAS ROZAMIENTO"
       },
       {
         id: "12-5",
+        track: 7,
         month: 11,
         day: 5,
-        title: "Don de Entendimiento",
-        quote: "«Abre mis ojos, y contemplaré las maravillas de tu voluntad» (Sal 119, 18)",
-        message: "El entendimiento es ese don que nos permite pasar de leer el Evangelio como un libro antiguo a escucharlo como una carta personal escrita para ti hoy.",
-        challenge: "Lee despacio el Evangelio de hoy (aunque sean 5 versículos) y quédate con una sola palabra."
+        text: "El don de Entendimiento es esa luz interior que nos permite pasar de leer el Evangelio como un libro antiguo a escucharlo como una carta personal escrita para ti hoy.\n\nNo hace falta leer mucho, sino dejar que una sola frase baje de la cabeza al corazón.",
+        challenge: "LEE EL EVANGELIO DE HOY Y QUÉDATE CON UNA SOLA PALABRA"
       },
       {
         id: "12-6",
+        track: 8,
         month: 11,
         day: 6,
         isSunday: true,
-        title: "2º Domingo de Adviento · La voz en el desierto",
-        quote: "«Una voz grita en el desierto: Preparad el camino del Señor» (Mc 1, 3)",
-        message: "Encendemos la segunda vela de la corona. Juan el Bautista nos recuerda que la alegría verdadera nace de hacer espacio a Dios. ¡Qué alegría verte caminar en la fe desde tu Confirmación!",
-        challenge: "🎟️ VALE ESPECIAL DE DOMINGO: Tienes un café/chocolate caliente pagado conmigo esta semana para charlar de cómo vas."
+        text: "Encendemos la segunda vela de la corona de Adviento. Juan el Bautista nos recuerda desde el desierto que la alegría verdadera nace de hacer espacio a Dios.\n\n¡Qué alegría verte caminar en la fe desde tu Confirmación!",
+        challenge: "VALE DE DOMINGO: TIENES UN CAFÉ O CHOCOLATE PAGADO CONMIGO ESTA SEMANA"
       },
       {
         id: "12-7",
+        track: 9,
         month: 11,
         day: 7,
-        title: "San Ambrosio: el maestro que supo esperar",
-        quote: "«La fe es el fundamento de lo que se espera» (Heb 11, 1)",
-        message: "San Ambrosio acompañó a San Agustín hasta su bautismo con paciencia infinita. En la Iglesia nunca caminamos solos; siempre nos sostenemos unos a otros en la oración.",
-        challenge: "Reza hoy una Avemaría por nuestro párroco, tus catequistas y el grupo con el que te confirmaste."
+        text: "San Ambrosio acompañó a San Agustín hasta su bautismo con una paciencia infinita.\n\nEn la Iglesia nunca caminamos solos; siempre nos sostenemos unos a otros con la oración silenciosa.",
+        challenge: "REZA UNA AVEMARÍA POR NUESTRO PÁRROCO Y TUS CATEQUISTAS"
       },
       {
         id: "12-8",
+        track: 10,
         month: 11,
         day: 8,
         isSunday: true,
-        title: "Inmaculada Concepción: el «Sí» que lo cambió todo",
-        quote: "«He aquí la esclava del Señor; hágase en mí según tu palabra» (Lc 1, 38)",
-        message: "Hoy es un día grande. María dijo «sí» sin entenderlo todo, confiando plenamente en Dios. Tu «sí» en la Confirmación se une al suyo. Deja que Ella te enseñe a cuidar a Jesús en tu interior.",
-        challenge: "Visita una iglesia hoy (es fiesta de precepto) y regálale a la Virgen una flor o una oración personal."
+        text: "Hoy celebramos a la Inmaculada Concepción. María dijo «sí» sin entenderlo todo, confiando plenamente en que para Dios nada hay imposible.\n\nTu «sí» en la Confirmación se une al suyo. Deja que Ella te enseñe a cuidar a Jesús en tu interior.",
+        challenge: "VISITA UNA IGLESIA HOY Y REGÁLALE A LA VIRGEN UNA ORACIÓN PERSONAL"
       },
       {
         id: "12-9",
+        track: 11,
         month: 11,
         day: 9,
-        title: "Don de Consejo",
-        quote: "«Tu palabra es lámpara para mis pasos, luz en mi sendero» (Sal 119, 105)",
-        message: "Cuando tengas dudas sobre qué decisión tomar, recuerda que tienes el don de Consejo. El Espíritu Santo habla en la paz de la conciencia bien formada.",
-        challenge: "Antes de tomar una decisión hoy, haz una pausa de 10 segundos y pregunta: «Señor, ¿qué harías Tú?»."
+        text: "Cuando tengas dudas sobre qué camino tomar, recuerda que llevas contigo el don de Consejo.\n\nEl Espíritu Santo no suele gritar; habla en la paz de la conciencia que se detiene a preguntar antes de actuar.",
+        challenge: "ANTES DE DECIDIR ALGO HOY, PREGUNTA: «SEÑOR, ¿QUÉ HARÍAS TÚ?»"
       },
       {
         id: "12-10",
+        track: 12,
         month: 11,
         day: 10,
-        title: "La humildad de lo pequeño",
-        quote: "«El que es fiel en lo poco, lo es también en lo mucho» (Lc 16, 10)",
-        message: "Dios eligió una aldea pequeña llamada Nazaret y un pesebre humilde. No busques hacer cosas extraordinarias; pon amor extraordinario en las cosas ordinarias de hoy.",
-        challenge: "Haz hoy una tarea en casa que nadie te haya pedido y sin decir que la has hecho tú."
+        text: "Dios eligió una aldea pequeña llamada Nazaret y un pesebre humilde para venir al mundo.\n\nNo busques hacer cosas extraordinarias para agradarle; pon amor extraordinario en las cosas pequeñas de hoy.",
+        challenge: "HAZ HOY UNA TAREA EN CASA SIN QUE NADIE SEPA QUE FUISTE TÚ"
       },
       {
         id: "12-11",
+        track: 13,
         month: 11,
         day: 11,
-        title: "Don de Fortaleza",
-        quote: "«Todo lo puedo en aquel que me conforta» (Flp 4, 13)",
-        message: "La Confirmación es el sacramento de la madurez cristiana. El don de Fortaleza no quita las dificultades, pero te da firmeza para mantenerte fiel cuando el ambiente va en otra dirección.",
-        challenge: "No te avergüences hoy de mostrar tu fe (bendecir la mesa, llevar tu cruz o hablar bien de Dios con naturalidad)."
+        text: "La Confirmación es el sacramento de la madurez cristiana.\n\nEl don de Fortaleza no elimina las dificultades ni el cansancio, pero te da firmeza para mantenerte fiel cuando el ambiente va en otra dirección.",
+        challenge: "NO TE CALLES HOY SI TOCA DEFENDER LO BUENO O BENDICIR LA MESA"
       },
       {
         id: "12-12",
+        track: 14,
         month: 11,
         day: 12,
-        title: "Nuestra Señora de Guadalupe",
-        quote: "«¿No estoy yo aquí, que soy tu madre?» (A San Juan Diego)",
-        message: "La Virgen se apareció en el Tepeyac con el niño Jesús en su seno, recordándonos que Ella siempre nos lleva a su Hijo con ternura de madre.",
-        challenge: "Pon bajo el manto de la Virgen de Guadalupe aquello que más te preocupe en este momento."
+        text: "Hoy es Nuestra Señora de Guadalupe. La Virgen se apareció en el Tepeyac llevando al niño Jesús en su seno.\n\nElla siempre nos repite al oído: «¿No estoy yo aquí, que soy tu madre?».",
+        challenge: "PON BAJO EL MANTO DE LA VIRGEN LO QUE MÁS TE PREOCUPA HOY"
       },
       {
         id: "12-13",
+        track: 15,
         month: 11,
         day: 13,
         isSunday: true,
-        title: "3er Domingo de Adviento · ¡Gaudete! (Alegraos)",
-        quote: "«Estad siempre alegres en el Señor; os lo repito, estad alegres. El Señor está cerca» (Flp 4, 4-5)",
-        message: "Hoy se enciende la vela ROSA de la corona. La alegría cristiana no es euforia pasajera, sino la certeza profunda de saberte amada por Dios.",
-        challenge: "🎟️ VALE DE GAUDETE: Haz hoy algo que te alegre el alma y comparte tu sonrisa con alguien que esté pasando un mal momento."
+        text: "Hoy se enciende la vela ROSA de la corona: Domingo de Gaudete (Alegraos).\n\nLa alegría cristiana no es euforia pasajera, sino la certeza profunda de saberte amada por Dios pase lo que pase.",
+        challenge: "HAZ HOY ALGO QUE TE ALEGRE EL ALMA Y CONTAGIA TU SONRISA A ALGUIEN"
       },
       {
         id: "12-14",
+        track: 16,
         month: 11,
         day: 14,
-        title: "San Juan de la Cruz: el amor que transforma",
-        quote: "«Al atardecer de la vida nos examinarán del amor» (San Juan de la Cruz)",
-        message: "Un gran místico español que nos enseña que, incluso cuando no «sentimos» nada al rezar, Dios sigue trabajando en silencio dentro de nosotros.",
-        challenge: "Reza hoy aunque tengas pocas ganas; esa oración hecha por pura fidelidad vale oro."
+        text: "San Juan de la Cruz nos dejó una frase inolvidable: «Al atardecer de la vida nos examinarán del amor».\n\nIncluso cuando no «sentimos» nada especial al rezar, Dios sigue trabajando en silencio dentro de nosotros.",
+        challenge: "REZA HOY AUNQUE TENGAS POCAS GANAS: ESA FIDELIDAD VALE ORO"
       },
       {
         id: "12-15",
+        track: 17,
         month: 11,
         day: 15,
-        title: "Don de Ciencia",
-        quote: "«Los cielos proclaman la gloria de Dios» (Sal 19, 2)",
-        message: "El don de Ciencia te permite descubrir la huella de Dios en la creación, en las personas y en los acontecimientos de tu historia.",
-        challenge: "Busca hoy tres cosas concretas por las que dar gracias (un paisaje, una conversación, un detalle recibido)."
+        text: "El don de Ciencia te permite descubrir la huella de Dios en la creación, en las personas y en los acontecimientos de tu propia historia.\n\nTodo lo que te rodea habla de quien lo creó.",
+        challenge: "APUNTA 3 COSAS CONCRETAS DE HOY POR LAS QUE DAR GRACIAS"
       },
       {
         id: "12-16",
+        track: 18,
         month: 11,
         day: 16,
-        title: "Comienza la Novena de Navidad",
-        quote: "«¡Ven, Señor Jesús!» (Ap 22, 20)",
-        message: "Entramos en la recta final: los últimos 9 días antes de Nochebuena. La Iglesia intensifica su súplica: «Maranatha, ¡Ven, Señor!».",
-        challenge: "Si aún no lo has hecho, coloca el Niño Jesús (o prepara su lugar vacío) en el Belén de tu casa."
+        text: "Comienza la Novena de Navidad: entramos en los últimos nueve días antes de Nochebuena.\n\nLa Iglesia entera intensifica su súplica con una sola palabra: «Maranatha, ¡Ven, Señor Jesús!».",
+        challenge: "PREPARA EL LUGAR VACÍO DEL NIÑO JESÚS EN EL BELÉN DE TU CASA"
       },
       {
         id: "12-17",
+        track: 19,
         month: 11,
         day: 17,
-        title: "Las raíces de Jesús",
-        quote: "«Libro de la genealogía de Jesucristo, hijo de David, hijo de Abrahán» (Mt 1, 1)",
-        message: "Hoy se lee la genealogía de Jesús. En su historia familiar hubo santos y pecadores, pero Dios escribió recto sobre renglones torcidos. También lo hace con tu historia.",
-        challenge: "Agradece hoy por tu familia, con sus luces y sus sombras, y reza por ellos."
+        text: "Hoy se lee la genealogía de Jesús. En su historia familiar hubo grandes santos y también personas llenas de defectos.\n\nDios sabe escribir recto sobre renglones torcidos. También lo hace con tu historia.",
+        challenge: "REZA HOY POR TODA TU FAMILIA, CON SUS LUCES Y SUS SOMBRAS"
       },
       {
         id: "12-18",
+        track: 20,
         month: 11,
         day: 18,
-        title: "San José: el silencio que cuida",
-        quote: "«José, hijo de David, no temas acoger a María, tu mujer» (Mt 1, 20)",
-        message: "San José no pronuncia ni una sola palabra en los Evangelios, pero sus hechos lo dicen todo. Supo proteger, acompañar y confiar.",
-        challenge: "Practica hoy la escucha activa: escucha a alguien sin interrumpir ni mirar el reloj."
+        text: "San José no pronuncia ni una sola palabra en los Evangelios, pero sus hechos lo dicen todo.\n\nSupo proteger, acompañar en silencio y confiar cuando los planes cambiaron por completo.",
+        challenge: "ESCUCHA HOY A ALGUIEN CON ATENCIÓN PLENA, SIN INTERRUMPIR"
       },
       {
         id: "12-19",
+        track: 21,
         month: 11,
         day: 19,
-        title: "Don de Piedad",
-        quote: "«El Espíritu mismo da testimonio a nuestro espíritu de que somos hijos de Dios» (Rom 8, 16)",
-        message: "El don de Piedad transforma nuestra relación con Dios: pasamos de tratarlo como un jefe lejano a llamarlo «Abbá, Papá» con total confianza.",
-        challenge: "Reza hoy el Padrenuestro muy despacio, saboreando cada frase."
+        text: "El don de Piedad transforma nuestra relación con Dios: pasamos de tratarlo como un juez lejano a llamarlo «Abbá, Papá» con total confianza de hijos.",
+        challenge: "REZA HOY EL PADRENUESTRO MUY DESPACIO, SABOREANDO CADA FRASE"
       },
       {
         id: "12-20",
+        track: 22,
         month: 11,
         day: 20,
         isSunday: true,
-        title: "4º Domingo de Adviento · Emmanuel, Dios con nosotros",
-        quote: "«Mirad: la Virgen concebirá y dará a luz un hijo, y le pondrá por nombre Emmanuel, que significa Dios-con-nosotros» (Mt 1, 23)",
-        message: "Las cuatro velas de la corona ya arden juntas. Falta muy poco. Como tu padrino, doy gracias a Dios por verte crecer en la fe este año.",
-        challenge: "Prepara tu corazón para la Navidad: si puedes, acércate al sacramento de la Confesión estos días."
+        text: "Las cuatro velas de la corona ya arden juntas en el 4º Domingo de Adviento.\n\nFalta muy poco para recibir al Emmanuel, el Dios-con-nosotros. Como tu padrino, doy gracias a Dios por verte crecer en la fe.",
+        challenge: "ACÉRCATE A CONFESARTE ESTOS DÍAS PARA LIMPIAR EL PESEBRE"
       },
       {
         id: "12-21",
+        track: 23,
         month: 11,
         day: 21,
-        title: "La Visitación: llevar a Jesús a otros",
-        quote: "«En cuanto oyó Isabel el saludo de María, saltó la criatura en su vientre» (Lc 1, 41)",
-        message: "En cuanto María recibe a Jesús, sale deprisa a servir a su prima Isabel. Quien tiene al Espíritu Santo no se queda encerrado en sí mismo.",
-        challenge: "Llama o visita hoy a algún familiar mayor o a alguien que pueda sentirse solo en estas fechas."
+        text: "En cuanto María recibe a Jesús en su seno, sale deprisa a servir a su prima Isabel.\n\nQuien lleva al Espíritu Santo dentro no se queda encerrado en sí mismo: sale al encuentro de los demás.",
+        challenge: "LLAMA O VISITA HOY A UN FAMILIAR MAYOR O A ALGUIEN QUE ESTÉ SOLO"
       },
       {
         id: "12-22",
+        track: 24,
         month: 11,
         day: 22,
-        title: "El Magnificat: el canto de los humildes",
-        quote: "«Proclama mi alma la grandeza del Señor, se alegra mi espíritu en Dios, mi salvador» (Lc 1, 46-47)",
-        message: "María canta las maravillas que Dios ha hecho en ella. Tú también tienes motivos inmensos para cantar tu propio Magnificat después de este año.",
-        challenge: "Escribe en una nota 3 regalos espirituales que Dios te haya hecho este 2026."
+        text: "«Proclama mi alma la grandeza del Señor». María canta el Magnificat reconociendo las maravillas que Dios ha hecho en su pequeñez.\n\nTú también tienes motivos inmensos para cantar tu propio Magnificat después de este año.",
+        challenge: "ESCRIBE 3 REGALOS ESPIRITUALES QUE DIOS TE HAYA HECHO EN 2026"
       },
       {
         id: "12-23",
+        track: 25,
         month: 11,
         day: 23,
-        title: "Don de Temor de Dios",
-        quote: "«El principio de la sabiduría es el temor del Señor» (Prov 9, 10)",
-        message: "No es miedo a Dios, sino el respeto amoroso del hijo que no quiere entristecer a quien tanto le ama. Es cuidar la amistad con Jesús como el mayor tesoro.",
-        challenge: "Cuida hoy tus palabras: evita cualquier crítica o comentario negativo sobre los demás."
+        text: "El don de Temor de Dios no es miedo al castigo, sino el respeto amoroso del hijo que no quiere entristecer a quien tanto le ama.\n\nEs cuidar la amistad con Jesús como el mayor tesoro.",
+        challenge: "CUIDA HOY TUS PALABRAS: CERO CRÍTICAS O COMENTARIOS NEGATIVOS"
       },
       {
         id: "12-24",
+        track: 26,
         month: 11,
         day: 24,
         isSunday: true,
-        title: "Nochebuena · ¡Ha llegado la Luz!",
-        quote: "«Hoy, en la ciudad de David, os ha nacido un Salvador, el Mesías, el Señor» (Lc 2, 11)",
-        message: "¡Feliz Nochebuena, ahijada! Esta noche se cumple la promesa. Que el Niño de Belén llene de paz tu casa y que el Espíritu Santo que recibiste el 20 de noviembre siga guiando cada uno de tus pasos. ¡Cuenta siempre conmigo!",
-        challenge: "🎄 REGALO DE NOCHEBUENA: Cuando vayas a la Misa del Gallo (o al besar al Niño Jesús), pide una gracia especial para este nuevo año. ¡Feliz Navidad!"
+        text: "¡Feliz Nochebuena, ahijada! Esta noche se cumple la promesa: nos ha nacido un Salvador.\n\nQue el Niño de Belén llene de paz tu casa y que el Espíritu Santo que recibiste el 20 de noviembre siga guiando cada uno de tus pasos. ¡Cuenta siempre conmigo!",
+        challenge: "EN LA MISA DEL GALLO, PIDE UNA GRACIA ESPECIAL AL NIÑO JESÚS"
       }
     ];
 
@@ -786,7 +823,7 @@
     });
 
     // Progreso guardado en navegador
-    let openedDays = JSON.parse(localStorage.getItem('adviento2026_completo') || '[]');
+    let openedDays = JSON.parse(localStorage.getItem('adviento2026_tracks') || '[]');
 
     function updateProgress() {
       const count = openedDays.length;
@@ -811,24 +848,22 @@
       const door = document.createElement('div');
       door.className = `door ${isAvailable ? 'available' : ''} ${item.isSunday ? 'sunday' : ''} ${isOpened ? 'opened' : ''}`;
 
-      let topLabel = monthName;
+      let topLabel = `Track ${item.track}`;
       if (item.month === 11 && item.day === 24) {
         topLabel = 'Nochebuena';
-      } else if (item.isSunday) {
-        topLabel = `Especial · ${item.month === 10 ? 'Nov' : 'Dic'}`;
       }
 
       door.innerHTML = `
         <span class="door-top">${topLabel}</span>
         <span class="door-number">${item.day}</span>
         <span class="door-status">
-          ${isAvailable ? (isOpened ? '✓ Abierta' : '✨ Abrir') : '🔒 Cerrada'}
+          ${isAvailable ? (isOpened ? '✓ Abierta' : '✨ Abrir') : `🔒 ${item.month === 10 ? 'Nov' : 'Dic'}`}
         </span>
       `;
 
       door.onclick = () => {
         if (!isAvailable) {
-          showToast(`🕯️ El Adviento es espera: esta ventana se abrirá el ${item.day} de ${monthName.toLowerCase()}.`);
+          showToast(`🕯️ El Adviento es espera: el Track ${item.track} se abrirá el ${item.day} de ${monthName.toLowerCase()}.`);
           return;
         }
         openModal(item, door);
@@ -841,16 +876,24 @@
 
     function openModal(item, doorEl) {
       const monthName = item.month === 10 ? 'Noviembre' : 'Diciembre';
-      document.getElementById('modal-tag').innerText = `${item.day} de ${monthName} · Adviento 2026`;
-      document.getElementById('modal-title').innerText = item.title;
-      document.getElementById('modal-quote').innerText = item.quote;
-      document.getElementById('modal-message').innerText = item.message;
+      document.getElementById('modal-track').innerText = `TRACK ${item.track}`;
+      document.getElementById('modal-date').innerText = `${item.day} DE ${monthName.toUpperCase()}`;
+
+      // Renderizar párrafos separados por \n\n
+      const bodyEl = document.getElementById('modal-body');
+      bodyEl.innerHTML = '';
+      item.text.split('\n\n').forEach(paragraph => {
+        const p = document.createElement('p');
+        p.innerText = paragraph;
+        bodyEl.appendChild(p);
+      });
+
       document.getElementById('modal-challenge').innerText = item.challenge;
       document.getElementById('modal').style.display = 'flex';
 
       if (!openedDays.includes(item.id)) {
         openedDays.push(item.id);
-        localStorage.setItem('adviento2026_completo', JSON.stringify(openedDays));
+        localStorage.setItem('adviento2026_tracks', JSON.stringify(openedDays));
         doorEl.classList.add('opened');
         doorEl.querySelector('.door-status').innerText = '✓ Abierta';
         updateProgress();
